@@ -10,11 +10,13 @@ using namespace LV2;
 class TiltEQ : public Plugin<TiltEQ>
 {
 public:
-    TiltEQ(double rate) 
+    TiltEQ(double rate)
         : Plugin<TiltEQ>(3) {} // since we have 3 ports
 
-    void run(uint32_t sample_count) { // currently pass through
-        for (uint32_t i=0; i<sample_count; ++i) {
+    void run(uint32_t sample_count)
+    { // currently pass through
+        for (uint32_t i = 0; i < sample_count; ++i)
+        {
             p(OUTPUT_PORT_INDEX)[i] = p(INPUT_PORT_INDEX)[i];
         }
     }
