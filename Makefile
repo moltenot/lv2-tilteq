@@ -4,7 +4,7 @@ INSTALLDIR=~/.lv2/
 .PHONY: install bundle
 
 tilteq.so:
-	g++ -o tilteq.so  -shared -fPIC -DPIC tilteq.cpp `pkg-config --cflags lv2-plugin`
+	g++ -o tilteq.so  -shared -fPIC -DPIC tilteq.cpp `pkg-config --cflags --libs lv2-plugin`
 
 clean:
 	rm tilteq.so

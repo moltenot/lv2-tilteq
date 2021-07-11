@@ -3,5 +3,5 @@
 
 <https://github.com/moltenot/lv2-tilteq>
         a lv2:Plugin ;
-        lv2:binary <tilet.so>  ;
+        lv2:binary <tilteq.so>  ;
         rdfs:seeAlso <tilteq.ttl> .
