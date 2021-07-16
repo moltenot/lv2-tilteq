@@ -55,6 +55,7 @@ protected:
         fftwf_execute(plan);
 
         print_output(out, n);
+        return out;
     }
 
 public:
