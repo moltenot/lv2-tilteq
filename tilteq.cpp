@@ -81,6 +81,15 @@ protected:
         return out;
     }
 
+    void normalize_amplitude(fftwf_complex *frequencies, uint32_t n)
+    {
+        /* divide each element of freqencies by n (in amplitude) */
+        for (int i = 0; i<n; i++) {
+            frequencies[i][0] = frequencies[i][0]/n;
+            frequencies[i][1] = frequencies[i][1]/n;
+        }
+    }
+
 public:
     TiltEQ(double rate)
         : Plugin<TiltEQ>(3)
@@ -96,6 +105,7 @@ public:
         fftwf_complex *freq_bins = fft_forward(p(INPUT_PORT_INDEX), sample_count);
 
         // change the frequencies in here
+        normalize_amplitude(freq_bins, sample_count);
 
         float *processed_signal = fft_backward(freq_bins, sample_count);
 
@@ -110,7 +120,7 @@ public:
 
         for (uint32_t i = 0; i < sample_count; ++i)
         {
-            p(OUTPUT_PORT_INDEX)[i] = p(INPUT_PORT_INDEX)[i];
+            p(OUTPUT_PORT_INDEX)[i] = processed_signal[i];
         }
 
         fftwf_free(freq_bins);
