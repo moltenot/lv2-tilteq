@@ -13,9 +13,7 @@ fftw_complex *generate_input_data(int N, fftw_complex *data)
 
     for (int i = 0; i < N; i++)
     {
-        double tmp = sin(i);
-        printf("%d", i);
-        printf(" -> %f\n", tmp);
+        double tmp = sin(i) * 2;
         data[i][0] = tmp; // assign sin(i) to the real part of data
     }
     return data;
@@ -30,21 +28,19 @@ void print_data(fftw_complex *data, int N)
 
     for (int i = 0; i < N; i++)
     {
-        printf("%f + %f i\n", data[i][0], data[i][1]);
+        printf("%lf + %lf i\n", data[i][0], data[i][1]);
     }
 }
 int main(void)
 {
-    int N = 16; // length of sequences
+    int N = 8; // length of sequences
     fftw_complex *in, *out;
 
-    fftw_plan plan;
-    out = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * N);
-    plan = fftw_plan_dft_1d(N, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
-
-    printf("Creating the input data\n");
     in = fftw_alloc_complex(sizeof(fftw_complex) * N);
     generate_input_data(N, in);
+
+    out = fftw_alloc_complex((sizeof(fftw_complex) * N));
+    fftw_plan plan = fftw_plan_dft_1d(N, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
 
     printf("\nPrinting the input data\n");
     print_data(in, N);
@@ -63,6 +59,4 @@ int main(void)
     fftw_destroy_plan(plan);
     fftw_free(in);
     fftw_free(out);
-
-    return 0;
 }

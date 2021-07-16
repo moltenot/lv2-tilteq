@@ -29,4 +29,4 @@ ffttest: fft_bin
 	./fft_bin
 
 fft_bin:
-	gcc fft_test.c  -lfftw3 -lm -o fft_bin
+	gcc fft_test.c  -lfftw3 -Wall -lm -o fft_bin
