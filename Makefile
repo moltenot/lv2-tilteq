@@ -4,7 +4,7 @@ INSTALLDIR=~/.lv2/
 .PHONY: install bundle clean uninstall reinstall test ffttest
 
 tilteq.so:
-	g++ -o tilteq.so  -shared -fPIC -DPIC tilteq.cpp `pkg-config --cflags --libs lv2-plugin`
+	g++ -o tilteq.so  -shared -fPIC -DPIC -lfftw3 -lfftw3f -lm tilteq.cpp `pkg-config --cflags --libs lv2-plugin`
 
 clean:
 	rm tilteq.so fft_bin
