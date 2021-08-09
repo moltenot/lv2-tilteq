@@ -1,13 +1,13 @@
 BUNDLENAME=tilteq.lv2
 INSTALLDIR=~/.lv2/
 
-.PHONY: install bundle
+.PHONY: install bundle clean uninstall reinstall test ffttest
 
 tilteq.so:
-	g++ -o tilteq.so  -shared -fPIC -DPIC tilteq.cpp `pkg-config --cflags lv2-plugin`
+	g++ -o tilteq.so  -shared -fPIC -DPIC tilteq.cpp `pkg-config --cflags --libs lv2-plugin fftw3 fftw3f`
 
 clean:
-	rm tilteq.so
+	rm tilteq.so fft_bin
 
 bundle: tilteq.so
 	mkdir -p 	$(BUNDLENAME)
@@ -24,3 +24,9 @@ reinstall: uninstall install
 
 test:
 	jalv https://github.com/moltenot/lv2-tilteq
+
+ffttest: fft_bin
+	./fft_bin
+
+fft_bin:
+	gcc fft_test.c  -lfftw3 -Wall -lm -o fft_bin
