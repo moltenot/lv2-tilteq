@@ -8,6 +8,7 @@
 
 #include <lv2plugin.hpp>
 #include <fftw3.h>
+#include <iostream>
 
 // have to make sure these are the same as in tilteq.ttl
 #define TILT_PORT_INDEX 0
@@ -18,6 +19,8 @@ using namespace LV2;
 
 class TiltEQ : public Plugin<TiltEQ>
 {
+private:
+    double sample_rate;
 
 protected:
     bool has_printed = false;
@@ -58,6 +61,23 @@ protected:
             {
                 printf("\n");
             }
+        }
+    }
+
+    /**
+     * Tilts the given frequency bins by whatever angle is specified by
+     * the control ports
+     */
+    void tilt_bins(fftwf_complex *bins, uint32_t n)
+    {
+        std::cout << "called tilt_bins " << std::endl;
+        float input = *p(TILT_PORT_INDEX); // on range(-1, 1)
+        float pivot = 10000.0;             // Hz, where to pivot the eq around
+        std::cout << "angle = " << input << std::endl;
+
+        for (uint32_t i = 0; i < n; i++)
+        {
+            float mult = bins[i] + () * input;
         }
     }
 
@@ -135,6 +155,7 @@ public:
         : Plugin<TiltEQ>(3) // since there are 3 ports in this plugin
     {
         printf("created tilteq with rate %f\n", rate);
+        sample_rate = rate;
     }
 
     /**
@@ -148,7 +169,7 @@ public:
         printf("\ncalled run\n");
         fftwf_complex *freq_bins = fft_forward(p(INPUT_PORT_INDEX), sample_count);
 
-        // change the frequencies in here
+        tilt_bins(freq_bins, sample_count);
         normalize_amplitude(freq_bins, sample_count);
 
         float *processed_signal = fft_backward(freq_bins, sample_count);
