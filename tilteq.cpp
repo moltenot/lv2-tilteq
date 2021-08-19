@@ -70,14 +70,18 @@ protected:
      */
     void tilt_bins(fftwf_complex *bins, uint32_t n)
     {
-        std::cout << "called tilt_bins " << std::endl;
         float input = *p(TILT_PORT_INDEX); // on range(-1, 1)
-        float pivot = 10000.0;             // Hz, where to pivot the eq around
-        std::cout << "angle = " << input << std::endl;
+        float pivot = 2000.0;              // Hz, where to pivot the eq around
 
-        for (uint32_t i = 0; i < n; i++)
+        double fundamental = sample_rate / n;
+
+        for (uint32_t i = 1; i < (n / 2) + 1; i++)
         {
-            float mult = bins[i] + () * input;
+            float cur_freq = fundamental * i;
+            float mult = 1 + (cur_freq - pivot) * input / 5000;
+            // the further from the pivot, the bigger the multiplier (on amplitude)
+            bins[i][0] = bins[i][0] * mult;
+            bins[i][1] = bins[i][1] * mult;
         }
     }
 
@@ -166,22 +170,12 @@ public:
     void run(uint32_t sample_count)
     {
 
-        printf("\ncalled run\n");
         fftwf_complex *freq_bins = fft_forward(p(INPUT_PORT_INDEX), sample_count);
 
         tilt_bins(freq_bins, sample_count);
         normalize_amplitude(freq_bins, sample_count);
 
         float *processed_signal = fft_backward(freq_bins, sample_count);
-
-        // print the frequency bins (once)
-        if (has_printed == false)
-        {
-            printf("printing frequency bins\n");
-            print_fft_complex(freq_bins, sample_count);
-            print_nums(processed_signal, sample_count);
-            has_printed = true;
-        }
 
         // write to the output
         for (uint32_t i = 0; i < sample_count; ++i)
