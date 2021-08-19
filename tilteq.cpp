@@ -14,6 +14,7 @@
 #define TILT_PORT_INDEX 0
 #define INPUT_PORT_INDEX 1
 #define OUTPUT_PORT_INDEX 2
+#define PIVOT_PORT_INDEX 3
 
 using namespace LV2;
 
@@ -70,8 +71,8 @@ protected:
      */
     void tilt_bins(fftwf_complex *bins, uint32_t n)
     {
-        float input = *p(TILT_PORT_INDEX); // on range(-1, 1)
-        float pivot = 2000.0;              // Hz, where to pivot the eq around
+        float input = *p(TILT_PORT_INDEX);  // on range(-1, 1)
+        float pivot = *p(PIVOT_PORT_INDEX); // Hz, where to pivot the eq around
 
         double fundamental = sample_rate / n;
 
@@ -156,7 +157,7 @@ protected:
 
 public:
     TiltEQ(double rate)
-        : Plugin<TiltEQ>(3) // since there are 3 ports in this plugin
+        : Plugin<TiltEQ>(4) // since there are 4 ports in this plugin
     {
         printf("created tilteq with rate %f\n", rate);
         sample_rate = rate;

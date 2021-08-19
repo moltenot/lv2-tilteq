@@ -25,4 +25,12 @@
         lv2:index 2;
         lv2:symbol "out";
         lv2:name "Output"
+    ] , [
+        a lv2:InputPort, lv2:ControlPort ;
+        lv2:index 3 ;
+        lv2:symbol "pivot" ;
+        lv2:name "Pivot" ;
+        lv2:default 2000.0 ;
+        lv2:minimum 1000.0 ;
+        lv2:maximum 5000.0
     ] .
