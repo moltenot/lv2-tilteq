@@ -1,0 +1,3 @@
+[submodule "dsp-utils"]
+	path = dsp-utils
+	url = git@github.com:moltenot/dsp-utils.git

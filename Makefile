@@ -1,10 +1,15 @@
 BUNDLENAME=tilteq.lv2
 INSTALLDIR=~/.lv2/
+UTILS_DIR=dsp-utils
+FUNC_OB=$(UTILS_DIR)/functions.o
 
 .PHONY: install bundle clean uninstall reinstall test ffttest
 
-tilteq.so:
-	g++ -o tilteq.so  -shared -fPIC -DPIC tilteq.cpp `pkg-config --cflags --libs lv2-plugin fftw3 fftw3f`
+tilteq.so: $(FUNC_OB)
+	g++ -o tilteq.so  -shared -fPIC -DPIC tilteq.cpp $(FUNC_OB) `pkg-config --cflags --libs lv2-plugin fftw3 fftw3f`
+
+$(FUNC_OB):
+	$(MAKE) -C dsp-utils
 
 clean:
 	rm tilteq.so fft_bin
@@ -24,9 +29,3 @@ reinstall: uninstall install
 
 test:
 	jalv https://github.com/moltenot/lv2-tilteq
-
-ffttest: fft_bin
-	./fft_bin
-
-fft_bin:
-	gcc fft_test.c  -lfftw3 -Wall -lm -o fft_bin
