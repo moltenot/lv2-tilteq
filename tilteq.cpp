@@ -97,6 +97,7 @@ public:
         }
 
         fftwf_free(freq_bins);
+        fftwf_free(processed_signal);
     }
 };
 
